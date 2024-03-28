@@ -32,10 +32,37 @@
     <div v-if="editPopupVisible" class="overlay">
       <div class="popup">
         <div class="flex flex-column">
-          <input type="text" v-model="editProductName" placeholder="Nombre del Producto" />
-          <input type="text" v-model="editProductDescription" placeholder="Descripción" />
-          <input type="text" v-model="editProductBrand" placeholder="Marca" />
-          <input type="number" v-model.number="editProductStock" placeholder="Stock" />
+          <h1 class="h-3rem m-0 p-0">Edit Product</h1>
+          <div class="h-15rem flex flex-column justify-content-evenly">
+            <FloatLabel>
+              <InputText class="w-8" v-model="editProductName" />
+              <label>Edit Product Name</label>
+            </FloatLabel>
+            <FloatLabel>
+              <InputText class="w-12" v-model="editProductDescription" />
+              <label>Edit Product Description</label>
+            </FloatLabel>
+            <FloatLabel>
+              <InputText class="w-7" v-model="editProductBrand" />
+              <label>Edit Product Brand</label>
+            </FloatLabel>
+          </div>
+          <InputNumber
+            v-model="editProductStock"
+            showButtons
+            buttonLayout="vertical"
+            style="width: 3rem"
+            :min="0"
+            :max="99"
+            class="m-2"
+          >
+            <template #incrementbuttonicon>
+              <span class="pi pi-plus" />
+            </template>
+            <template #decrementbuttonicon>
+              <span class="pi pi-minus" />
+            </template>
+          </InputNumber>
           <Button class="flex justify-content-center" @click="updateProduct"
             >Actualizar Producto</Button
           >
