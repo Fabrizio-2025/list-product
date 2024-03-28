@@ -2,7 +2,7 @@
   <div>
     <Toast></Toast>
     <h1>Productos</h1>
-    
+
     <Button class="w-1" icon="pi pi-plus" @click="openCreatePopup">Crear Producto</Button>
     <DataTable :value="products">
       <Column field="id" sortable header="ID"></Column>
@@ -27,7 +27,7 @@
         </template>
       </Column>
     </DataTable>
-    
+
     <!-- Edit Popup -->
     <div v-if="editPopupVisible" class="overlay">
       <div class="popup">
@@ -50,12 +50,49 @@
     <div v-if="createPopupVisible" class="overlay">
       <div class="popup">
         <div class="flex flex-column">
-          <input type="text" v-model="newProductName" placeholder="Nombre del Producto" />
+          <h1 class="h-3rem m-0 p-0">Add Product</h1>
+          <div class="h-15rem flex flex-column justify-content-evenly">
+            <FloatLabel>
+              <InputText class="w-8" v-model="newProductName" />
+              <label>New Product Name</label>
+            </FloatLabel>
+            <FloatLabel>
+              <InputText class="w-12" v-model="newProductDescription" />
+              <label>New Product Description</label>
+            </FloatLabel>
+            <FloatLabel>
+              <InputText class="w-7" v-model="newProductBrand" />
+              <label>New Product Brand</label>
+            </FloatLabel>
+          </div>
+          <InputNumber
+            v-model="newProductStock"
+            showButtons
+            buttonLayout="vertical"
+            style="width: 3rem"
+            :min="0"
+            :max="99"
+            class="m-2"
+          >
+            <template #incrementbuttonicon>
+              <span class="pi pi-plus" />
+            </template>
+            <template #decrementbuttonicon>
+              <span class="pi pi-minus" />
+            </template>
+          </InputNumber>
+
+          <!-- <input type="text" v-model="newProductName" placeholder="Nombre del Producto" />
           <input type="text" v-model="newProductDescription" placeholder="Descripción" />
           <input type="text" v-model="newProductBrand" placeholder="Marca" />
-          <input type="number" v-model.number="newProductStock" placeholder="Stock" />
-          <Button @click="addProduct">Añadir Producto</Button>
-          <Button class="p-button-danger" @click="closeCreatePopup">Cerrar</Button>
+          <input type="number" v-model.number="newProductStock" placeholder="Stock" /> -->
+
+          <Button class="w-3 justify-content-center m-1" @click="addProduct"
+            >Añadir Producto</Button
+          >
+          <Button class="p-button-danger w-3 justify-content-center m-1" @click="closeCreatePopup"
+            >Cerrar</Button
+          >
         </div>
       </div>
     </div>
@@ -69,7 +106,10 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
 import { useToast } from 'primevue/usetoast'
-import Toast from 'primevue/toast';
+import Toast from 'primevue/toast'
+import InputText from 'primevue/inputtext'
+import FloatLabel from 'primevue/floatlabel'
+import InputNumber from 'primevue/inputnumber'
 
 const products = ref<Product[]>([])
 const newProductName = ref('')
@@ -254,7 +294,7 @@ onMounted(fetchProducts)
   padding: 20px;
   background-color: white;
   z-index: 1000;
-  height: 50vh;
-  width: 50vw;
+  height: 59vh;
+  width: 35vw;
 }
 </style>

@@ -106,11 +106,18 @@
       "stock": 95
     },
     {
+      "name": "nose",
+      "description": "nose",
+      "brand": "nose",
+      "stock": 2,
+      "id": 16
+    },
+    {
       "name": "",
       "description": "",
       "brand": "",
-      "stock": 0,
-      "id": 16
+      "stock": 1,
+      "id": 17
     }
   ]
 }
