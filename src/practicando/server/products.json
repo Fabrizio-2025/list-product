@@ -1,0 +1,116 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Eco Headphones",
+      "description": "Durable and reliable for professional use.",
+      "brand": "GizmoPro",
+      "stock": 44
+    },
+    {
+      "id": 2,
+      "name": "Eco Cleaner",
+      "description": "High-quality product for everyday use.",
+      "brand": "GizmoPro",
+      "stock": 68
+    },
+    {
+      "id": 3,
+      "name": "Fresh Headphones",
+      "description": "Durable and reliable for professional use.",
+      "brand": "NextGen",
+      "stock": 29
+    },
+    {
+      "id": 4,
+      "name": "Super Cleaner",
+      "description": "Compact and portable, perfect for travel.",
+      "brand": "NextGen",
+      "stock": 98
+    },
+    {
+      "id": 5,
+      "name": "Super Phone",
+      "description": "Durable and reliable for professional use.",
+      "brand": "NextGen",
+      "stock": 52
+    },
+    {
+      "id": 6,
+      "name": "Fresh Cleaner",
+      "description": "Eco-friendly and energy-efficient.",
+      "brand": "QualityCo",
+      "stock": 11
+    },
+    {
+      "id": 7,
+      "name": "Super Headphones",
+      "description": "Eco-friendly and energy-efficient.",
+      "brand": "EcoGoods",
+      "stock": 53
+    },
+    {
+      "id": 8,
+      "name": "Ultra Phone",
+      "description": "Latest technology with sleek design.",
+      "brand": "TechCorp",
+      "stock": 25
+    },
+    {
+      "id": 9,
+      "name": "Eco Cleaner",
+      "description": "High-quality product for everyday use.",
+      "brand": "EcoGoods",
+      "stock": 32
+    },
+    {
+      "id": 10,
+      "name": "Mega Drone",
+      "description": "Durable and reliable for professional use.",
+      "brand": "GizmoPro",
+      "stock": 50
+    },
+    {
+      "id": 11,
+      "name": "Super Drone",
+      "description": "Latest technology with sleek design.",
+      "brand": "EcoGoods",
+      "stock": 59
+    },
+    {
+      "id": 12,
+      "name": "Super Drone",
+      "description": "Compact and portable, perfect for travel.",
+      "brand": "EcoGoods",
+      "stock": 3
+    },
+    {
+      "id": 13,
+      "name": "Mega Laptop",
+      "description": "Latest technology with sleek design.",
+      "brand": "TechCorp",
+      "stock": 63
+    },
+    {
+      "id": 14,
+      "name": "Ultra Cleaner",
+      "description": "Compact and portable, perfect for travel.",
+      "brand": "TechCorp",
+      "stock": 43
+    },
+    {
+      "id": 15,
+      "name": "Fresh Headphones",
+      "description": "Latest technology with sleek design.",
+      "brand": "QualityCo",
+      "stock": 95
+    },
+    {
+      "name": "",
+      "description": "",
+      "brand": "",
+      "stock": 0,
+      "id": 16
+    }
+  ]
+}
