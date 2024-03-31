@@ -2,9 +2,17 @@
   <div>
     <Toast></Toast>
     <h1>Productos</h1>
-
-    <Button class="w-1" icon="pi pi-plus" @click="openCreatePopup">Crear Producto</Button>
-    <DataTable :value="products">
+    <div class="flex justify-content-between align-items-center">
+      <Button class="w-1" icon="pi pi-plus" @click="openCreatePopup">Crear Producto</Button>
+      <div class="card flex justify-content-center">
+        <AutoComplete
+          v-model="autocompleteValue"
+          :suggestions="brandSuggestions"
+          @complete="search"
+        />
+      </div>
+    </div>
+    <DataTable :value="filteredProducts">
       <Column field="id" sortable header="ID"></Column>
       <Column field="name" header="Nombre"></Column>
       <Column field="description" header="Descripción"></Column>
@@ -109,11 +117,6 @@
             </template>
           </InputNumber>
 
-          <!-- <input type="text" v-model="newProductName" placeholder="Nombre del Producto" />
-          <input type="text" v-model="newProductDescription" placeholder="Descripción" />
-          <input type="text" v-model="newProductBrand" placeholder="Marca" />
-          <input type="number" v-model.number="newProductStock" placeholder="Stock" /> -->
-
           <Button class="w-3 justify-content-center m-1" @click="addProduct"
             >Añadir Producto</Button
           >
@@ -127,7 +130,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import type { Product } from '../models/products'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
@@ -137,6 +140,7 @@ import Toast from 'primevue/toast'
 import InputText from 'primevue/inputtext'
 import FloatLabel from 'primevue/floatlabel'
 import InputNumber from 'primevue/inputnumber'
+import AutoComplete from 'primevue/autocomplete'
 
 const products = ref<Product[]>([])
 const newProductName = ref('')
@@ -152,6 +156,13 @@ const editProductDescription = ref('')
 const editProductBrand = ref('')
 const editProductStock = ref(0)
 const toast = useToast()
+const autocompleteValue = ref('')
+const brandSuggestions = ref<string[]>([])
+
+
+interface AutoCompleteSearchEvent {
+  query: string
+}
 
 const showError = (summary: string, detail: string) => {
   toast.add({
@@ -161,6 +172,26 @@ const showError = (summary: string, detail: string) => {
     life: 3000
   })
 }
+
+const uniqueBrands = computed(() => {
+  const brands = new Set(products.value.map((product) => product.brand))
+  return Array.from(brands)
+})
+
+function search(event: AutoCompleteSearchEvent) {
+  brandSuggestions.value = uniqueBrands.value.filter((brand) =>
+    brand.toLowerCase().includes(event.query.toLowerCase())
+  )
+}
+
+const filteredProducts = computed(() => {
+  if (autocompleteValue.value) {
+    return products.value.filter((product) =>
+      product.brand.toLowerCase().includes(autocompleteValue.value.toLowerCase())
+    )
+  }
+  return products.value
+})
 
 function productExists(name: string, brand: string): boolean {
   return products.value.some((product) => product.name === name && product.brand === brand)
