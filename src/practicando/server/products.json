@@ -5,7 +5,7 @@
       "name": "Eco Headphones",
       "description": "Durable and reliable for professional use.",
       "brand": "GizmoPro",
-      "stock": 44
+      "stock": 45
     },
     {
       "id": 2,
@@ -50,13 +50,6 @@
       "stock": 53
     },
     {
-      "id": 8,
-      "name": "Ultra Phone",
-      "description": "Latest technology with sleek design.",
-      "brand": "TechCorp",
-      "stock": 25
-    },
-    {
       "id": 9,
       "name": "Eco Cleaner",
       "description": "High-quality product for everyday use.",
@@ -97,20 +90,6 @@
       "description": "Compact and portable, perfect for travel.",
       "brand": "TechCorp",
       "stock": 43
-    },
-    {
-      "id": 15,
-      "name": "Fresh Headphones",
-      "description": "Latest technology with sleek design.",
-      "brand": "QualityCo",
-      "stock": 95
-    },
-    {
-      "name": "headphones",
-      "description": "a headphones",
-      "brand": "headphonesbrand",
-      "stock": 7,
-      "id": 16
     }
   ]
 }

@@ -43,7 +43,7 @@
           <h1 class="h-3rem m-0 p-0">Edit Product</h1>
           <div class="h-15rem flex flex-column justify-content-evenly">
             <FloatLabel>
-              <InputText class="w-8" v-model="editProductName" />
+              <InputText class="w-12" v-model="editProductName" />
               <label>Edit Product Name</label>
             </FloatLabel>
             <FloatLabel>
@@ -51,7 +51,7 @@
               <label>Edit Product Description</label>
             </FloatLabel>
             <FloatLabel>
-              <InputText class="w-7" v-model="editProductBrand" />
+              <InputText class="w-12" v-model="editProductBrand" />
               <label>Edit Product Brand</label>
             </FloatLabel>
           </div>
@@ -71,7 +71,10 @@
               <span class="pi pi-minus" />
             </template>
           </InputNumber>
-          <Button class="flex justify-content-center" @click="updateProduct"
+          <Button
+            class="flex justify-content-center"
+            @click="updateProduct"
+            :disabled="isUpdateButtonDisabled"
             >Actualizar Producto</Button
           >
           <Button class="p-button-danger flex justify-content-center" @click="closeEditPopup"
@@ -88,7 +91,7 @@
           <h1 class="h-3rem m-0 p-0">Add Product</h1>
           <div class="h-15rem flex flex-column justify-content-evenly">
             <FloatLabel>
-              <InputText class="w-8" v-model="newProductName" />
+              <InputText class="w-12" v-model="newProductName" />
               <label>New Product Name</label>
             </FloatLabel>
             <FloatLabel>
@@ -96,7 +99,7 @@
               <label>New Product Description</label>
             </FloatLabel>
             <FloatLabel>
-              <InputText class="w-7" v-model="newProductBrand" />
+              <InputText class="w-12" v-model="newProductBrand" />
               <label>New Product Brand</label>
             </FloatLabel>
           </div>
@@ -117,7 +120,10 @@
             </template>
           </InputNumber>
 
-          <Button class="w-3 justify-content-center m-1" @click="addProduct"
+          <Button
+            class="w-3 justify-content-center m-1"
+            @click="addProduct"
+            :disabled="isAddButtonDisabled"
             >Añadir Producto</Button
           >
           <Button class="p-button-danger w-3 justify-content-center m-1" @click="closeCreatePopup"
@@ -159,10 +165,30 @@ const toast = useToast()
 const autocompleteValue = ref('')
 const brandSuggestions = ref<string[]>([])
 
-
 interface AutoCompleteSearchEvent {
   query: string
 }
+
+const isUpdateButtonDisabled = computed(() => {
+  if (!editProduct.value) {
+    return true // Si no hay producto seleccionado para editar, deshabilita el botón.
+  }
+
+  const fieldsFilled =
+    editProductName.value.trim() !== '' &&
+    editProductBrand.value.trim() !== '' &&
+    editProductStock.value > 0
+
+  return !fieldsFilled
+})
+
+const isAddButtonDisabled = computed(() => {
+  return (
+    newProductName.value.trim() === '' ||
+    newProductBrand.value.trim() === '' ||
+    newProductStock.value <= 0 // Asumiendo que el stock no puede ser 0 o negativo.
+  )
+})
 
 const showError = (summary: string, detail: string) => {
   toast.add({
@@ -232,9 +258,21 @@ function deleteProduct(productId: number) {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
+      return response.json()
     })
-    .then(() => fetchProducts()) // Recarga la lista de productos después de eliminar
-    .catch((error) => console.error('Error:', error))
+    .then(() => {
+      fetchProducts() // Recarga la lista de productos después de eliminar
+      toast.add({
+        severity: 'warn',
+        summary: 'Producto Eliminado',
+        detail: 'El producto ha sido eliminado exitosamente.',
+        life: 3000
+      })
+    })
+    .catch((error) => {
+      console.error('Error:', error)
+      showError('Error', 'No se pudo eliminar el producto.')
+    })
 }
 
 function addProduct() {
@@ -304,7 +342,7 @@ function updateProduct() {
       description: editProductDescription.value,
       brand: editProductBrand.value,
       stock: editProductStock.value
-    }
+    };
 
     fetch(`http://localhost:3000/products/${editProduct.value.id}`, {
       method: 'PUT',
@@ -313,19 +351,21 @@ function updateProduct() {
       },
       body: JSON.stringify(updatedProduct)
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        return response.json()
-      })
-      .then(() => {
-        fetchProducts() // Fetch the updated list of products
-        closeEditPopup() // Close the edit popup dialog
-      })
-      .catch((error) => {
-        console.error('Error:', error)
-      })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(() => {
+      fetchProducts(); // Fetch the updated list of products
+      closeEditPopup(); // Close the edit popup dialog
+      toast.add({ severity: 'info', summary: 'Producto Modificado', detail: 'El producto ha sido modificado exitosamente.', life: 3000 });
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      showError('Error', 'No se pudo modificar el producto.');
+    });
   }
 }
 
