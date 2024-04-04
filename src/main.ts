@@ -4,6 +4,8 @@ import 'primeicons/primeicons.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import ToastService from 'primevue/toastservice';
+import ConfirmDialog from 'primevue/confirmdialog'
+import ConfirmationService from 'primevue/confirmationservice'
 
 import PrimeVue from 'primevue/config'
 
@@ -14,6 +16,9 @@ import App from './App.vue'
 import router from './router'
 
 const app = createApp(App)
+
+app.use(ConfirmationService)
+app.component('ConfirmDialog', ConfirmDialog)
 app.use(ToastService);
 app.use(PrimeVue)
 app.use(createPinia())

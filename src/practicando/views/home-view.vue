@@ -1,18 +1,29 @@
 <template>
   <div>
     <Toast></Toast>
+    <ConfirmDialog />
     <h1>Productos</h1>
     <div class="flex justify-content-between align-items-center">
       <Button class="w-1" icon="pi pi-plus" @click="openCreatePopup">Crear Producto</Button>
-      <div class="card flex justify-content-center">
+      <div class="w-4 card flex justify-content-between align-items-center">
+        <h3>Buscar por :</h3>
+        <Dropdown
+          v-model="selectedSearchOption"
+          :options="searchOptions"
+          optionLabel="name"
+          placeholder="Select a Field"
+          class="w-full md:w-14rem h-3rem"
+        />
+
         <AutoComplete
           v-model="autocompleteValue"
           :suggestions="brandSuggestions"
           @complete="search"
+          class="h-3rem"
         />
       </div>
     </div>
-    <DataTable :value="filteredProducts">
+    <DataTable :value="filteredProducts" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
       <Column field="id" sortable header="ID"></Column>
       <Column field="name" header="Nombre"></Column>
       <Column field="description" header="Descripción"></Column>
@@ -147,6 +158,9 @@ import InputText from 'primevue/inputtext'
 import FloatLabel from 'primevue/floatlabel'
 import InputNumber from 'primevue/inputnumber'
 import AutoComplete from 'primevue/autocomplete'
+import Dropdown from 'primevue/dropdown'
+import ConfirmDialog from 'primevue/confirmdialog'
+import { useConfirm } from 'primevue/useconfirm'
 
 const products = ref<Product[]>([])
 const newProductName = ref('')
@@ -164,10 +178,21 @@ const editProductStock = ref(0)
 const toast = useToast()
 const autocompleteValue = ref('')
 const brandSuggestions = ref<string[]>([])
+const confirm = useConfirm()
 
 interface AutoCompleteSearchEvent {
   query: string
 }
+
+const searchOptions = ref([
+  { name: 'ID', value: 'id' },
+  { name: 'Nombre', value: 'name' },
+  { name: 'Descripción', value: 'description' },
+  { name: 'Marca', value: 'brand' },
+  { name: 'Stock', value: 'stock' }
+])
+
+const selectedSearchOption = ref(searchOptions.value[0])
 
 const isUpdateButtonDisabled = computed(() => {
   if (!editProduct.value) {
@@ -186,7 +211,7 @@ const isAddButtonDisabled = computed(() => {
   return (
     newProductName.value.trim() === '' ||
     newProductBrand.value.trim() === '' ||
-    newProductStock.value <= 0 // Asumiendo que el stock no puede ser 0 o negativo.
+    newProductStock.value >= 0 // Asumiendo que el stock no puede ser 0 o negativo.
   )
 })
 
@@ -199,24 +224,31 @@ const showError = (summary: string, detail: string) => {
   })
 }
 
-const uniqueBrands = computed(() => {
-  const brands = new Set(products.value.map((product) => product.brand))
-  return Array.from(brands)
-})
-
 function search(event: AutoCompleteSearchEvent) {
-  brandSuggestions.value = uniqueBrands.value.filter((brand) =>
-    brand.toLowerCase().includes(event.query.toLowerCase())
-  )
+  const searchTerm = event.query.toLowerCase()
+  const searchKey = selectedSearchOption.value.value as keyof Product
+
+  brandSuggestions.value = products.value
+    .filter((product) => {
+      const fieldValue = product[searchKey]?.toString().toLowerCase()
+      return fieldValue.includes(searchTerm)
+    })
+    .map((product) => product[searchKey]?.toString())
 }
 
 const filteredProducts = computed(() => {
-  if (autocompleteValue.value) {
-    return products.value.filter((product) =>
-      product.brand.toLowerCase().includes(autocompleteValue.value.toLowerCase())
-    )
+  // Si no hay valor en autocomplete, devolver todos los productos
+  if (!autocompleteValue.value) {
+    return products.value
   }
-  return products.value
+
+  return products.value.filter((product) => {
+    // Usa aserción de tipo para asegurar que la clave es válida para Product
+    const fieldValue = product[selectedSearchOption.value.value as keyof Product]
+      ?.toString()
+      .toLowerCase()
+    return fieldValue?.includes(autocompleteValue.value.toLowerCase())
+  })
 })
 
 function productExists(name: string, brand: string): boolean {
@@ -251,6 +283,19 @@ function openCreatePopup() {
 }
 
 function deleteProduct(productId: number) {
+  confirm.require({
+    message: '¿Estás seguro de que quieres eliminar este producto?',
+    header: 'Confirmar eliminación',
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Eliminar',
+    rejectLabel: 'Cancelar',
+    accept: () => {
+      performDeletion(productId)
+    }
+  })
+}
+
+function performDeletion(productId: number) {
   fetch(`http://localhost:3000/products/${productId}`, {
     method: 'DELETE'
   })
@@ -261,10 +306,10 @@ function deleteProduct(productId: number) {
       return response.json()
     })
     .then(() => {
-      fetchProducts() // Recarga la lista de productos después de eliminar
+      fetchProducts()
       toast.add({
         severity: 'warn',
-        summary: 'Producto Eliminado',
+        summary: 'Producto eliminado',
         detail: 'El producto ha sido eliminado exitosamente.',
         life: 3000
       })
@@ -342,7 +387,7 @@ function updateProduct() {
       description: editProductDescription.value,
       brand: editProductBrand.value,
       stock: editProductStock.value
-    };
+    }
 
     fetch(`http://localhost:3000/products/${editProduct.value.id}`, {
       method: 'PUT',
@@ -351,21 +396,26 @@ function updateProduct() {
       },
       body: JSON.stringify(updatedProduct)
     })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(() => {
-      fetchProducts(); // Fetch the updated list of products
-      closeEditPopup(); // Close the edit popup dialog
-      toast.add({ severity: 'info', summary: 'Producto Modificado', detail: 'El producto ha sido modificado exitosamente.', life: 3000 });
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      showError('Error', 'No se pudo modificar el producto.');
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        return response.json()
+      })
+      .then(() => {
+        fetchProducts() // Fetch the updated list of products
+        closeEditPopup() // Close the edit popup dialog
+        toast.add({
+          severity: 'info',
+          summary: 'Producto Modificado',
+          detail: 'El producto ha sido modificado exitosamente.',
+          life: 3000
+        })
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+        showError('Error', 'No se pudo modificar el producto.')
+      })
   }
 }
 
