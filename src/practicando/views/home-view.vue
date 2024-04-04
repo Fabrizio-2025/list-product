@@ -3,6 +3,7 @@
     <Toast></Toast>
     <ConfirmDialog />
     <h1>Productos</h1>
+    <a class="font-bold text-primary-600" href="/graph">Grafico</a>
     <div class="flex justify-content-between align-items-center">
       <Button class="w-1" icon="pi pi-plus" @click="openCreatePopup">Crear Producto</Button>
       <div class="w-4 card flex justify-content-between align-items-center">
@@ -202,7 +203,7 @@ const isUpdateButtonDisabled = computed(() => {
   const fieldsFilled =
     editProductName.value.trim() !== '' &&
     editProductBrand.value.trim() !== '' &&
-    editProductStock.value > 0
+    editProductStock.value >= 0
 
   return !fieldsFilled
 })
@@ -211,7 +212,7 @@ const isAddButtonDisabled = computed(() => {
   return (
     newProductName.value.trim() === '' ||
     newProductBrand.value.trim() === '' ||
-    newProductStock.value >= 0 // Asumiendo que el stock no puede ser 0 o negativo.
+    newProductStock.value <= 0 // Asumiendo que el stock no puede ser 0 o negativo.
   )
 })
 
@@ -237,13 +238,12 @@ function search(event: AutoCompleteSearchEvent) {
 }
 
 const filteredProducts = computed(() => {
-  // Si no hay valor en autocomplete, devolver todos los productos
   if (!autocompleteValue.value) {
     return products.value
   }
 
   return products.value.filter((product) => {
-    // Usa aserción de tipo para asegurar que la clave es válida para Product
+    // Usa aserción de tipo para asegurar que la clave es válida para Producto
     const fieldValue = product[selectedSearchOption.value.value as keyof Product]
       ?.toString()
       .toLowerCase()

@@ -90,6 +90,13 @@
       "description": "Compact and portable, perfect for travel.",
       "brand": "TechCorp",
       "stock": 43
+    },
+    {
+      "name": "asasa",
+      "description": "asas",
+      "brand": "asasa",
+      "stock": 2,
+      "id": 15
     }
   ]
 }
