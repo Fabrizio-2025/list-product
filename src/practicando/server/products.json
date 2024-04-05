@@ -2,101 +2,87 @@
   "products": [
     {
       "id": 1,
-      "name": "Eco Headphones",
-      "description": "Durable and reliable for professional use.",
-      "brand": "GizmoPro",
-      "stock": 45
+      "name": "Vino Navarro Correas Colección Privada",
+      "description": "750 mL, -25%, Tottus",
+      "brand": "NAVARRO CORREAS",
+      "stock": 14
     },
     {
       "id": 2,
-      "name": "Eco Cleaner",
-      "description": "High-quality product for everyday use.",
-      "brand": "GizmoPro",
-      "stock": 68
+      "name": "Vino Cabernet Sauvignon Las Moras",
+      "description": "13.5° 750 mL, -25%, Tottus",
+      "brand": "LAS MORAS",
+      "stock": 24
     },
     {
       "id": 3,
-      "name": "Fresh Headphones",
-      "description": "Durable and reliable for professional use.",
-      "brand": "NextGen",
-      "stock": 29
+      "name": "Agua Mineral sin gas Cielo Bidón",
+      "description": "20 L, -18%, Tottus",
+      "brand": "CIELO",
+      "stock": 15
     },
     {
       "id": 4,
-      "name": "Super Cleaner",
-      "description": "Compact and portable, perfect for travel.",
-      "brand": "NextGen",
-      "stock": 98
+      "name": "12 Pack Rehidratante Sporade Tropical",
+      "description": "500 mL, -20%, Tottus",
+      "brand": "SPORADE",
+      "stock": 15
     },
     {
       "id": 5,
-      "name": "Super Phone",
-      "description": "Durable and reliable for professional use.",
-      "brand": "NextGen",
-      "stock": 52
+      "name": "Alimento Granulado Milo Activ Go",
+      "description": "940g, -23%, Tottus",
+      "brand": "MILO",
+      "stock": 18
     },
     {
       "id": 6,
-      "name": "Fresh Cleaner",
-      "description": "Eco-friendly and energy-efficient.",
-      "brand": "QualityCo",
-      "stock": 11
-    },
-    {
-      "id": 7,
-      "name": "Super Headphones",
-      "description": "Eco-friendly and energy-efficient.",
-      "brand": "EcoGoods",
-      "stock": 53
-    },
-    {
-      "id": 9,
-      "name": "Eco Cleaner",
-      "description": "High-quality product for everyday use.",
-      "brand": "EcoGoods",
-      "stock": 32
-    },
-    {
-      "id": 10,
-      "name": "Mega Drone",
-      "description": "Durable and reliable for professional use.",
-      "brand": "GizmoPro",
+      "name": "Chorizo Premium Parrillero",
+      "description": "-22%, Tottus",
+      "brand": "BRAEDT",
       "stock": 50
     },
     {
+      "id": 7,
+      "name": "Mantequilla Gloria en pote",
+      "description": "390 g, -35%, Tottus",
+      "brand": "GLORIA",
+      "stock": 60
+    },
+    {
+      "id": 8,
+      "name": "Galleta de Soda San Jorge",
+      "description": "7 Unidades, -20%, Tottus",
+      "brand": "SAN JORGE",
+      "stock": 55
+    },
+    {
+      "id": 9,
+      "name": "Sixpack Trozos De Atún En Aceite Tottus",
+      "description": "x 170 g, Tottus",
+      "brand": "TOTTUS",
+      "stock": 66
+    },
+    {
+      "id": 10,
+      "name": "Vino Tinto 19 Crimes Cali Red",
+      "description": "750 mL, -25%, Tottus",
+      "brand": "19 CRIMES",
+      "stock": 83
+    },
+    {
       "id": 11,
-      "name": "Super Drone",
-      "description": "Latest technology with sleek design.",
-      "brand": "EcoGoods",
-      "stock": 59
+      "name": "Vino Navarro Correas Colección Privada Cabernet Sauvignon",
+      "description": "750 mL, -25%, Tottus",
+      "brand": "NAVARRO CORREAS",
+      "stock": 5
     },
     {
       "id": 12,
-      "name": "Super DronE",
-      "description": "Compact and portable, perfect for travel.",
-      "brand": "EcoGoods",
-      "stock": 3
-    },
-    {
-      "id": 13,
-      "name": "Mega Laptop",
-      "description": "Latest technology with sleek design.",
-      "brand": "TechCorp",
-      "stock": 63
-    },
-    {
-      "id": 14,
-      "name": "Ultra Cleaner",
-      "description": "Compact and portable, perfect for travel.",
-      "brand": "TechCorp",
-      "stock": 43
-    },
-    {
-      "name": "asasa",
-      "description": "asas",
-      "brand": "asasa",
-      "stock": 2,
-      "id": 15
+      "name": "VINO NAVARRO CORREAS TINTO DOLORES RED BLEND",
+      "description": "750 mL, -25%, Tottus",
+      "brand": "NAVARRO CORREAS",
+      "stock": 5
     }
   ]
 }

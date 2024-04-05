@@ -9,10 +9,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import Chart from 'primevue/chart';
-import axios from 'axios';
-
+import { ref, onMounted } from 'vue'
+import Chart from 'primevue/chart'
+import axios from 'axios'
 
 const chartData = ref({
   labels: [],
@@ -22,45 +21,46 @@ const chartData = ref({
       data: [],
       backgroundColor: [],
       borderColor: [],
-      borderWidth: 1,
-    },
-  ],
-});
+      borderWidth: 1
+    }
+  ]
+})
 
 const chartOptions = ref({
   scales: {
     y: {
-      beginAtZero: true,
-    },
+      beginAtZero: true
+    }
   },
   responsive: true,
-  maintainAspectRatio: false,
-});
+  maintainAspectRatio: false
+})
 
 onMounted(async () => {
   try {
-    const { data: products } = await axios.get('http://localhost:3000/products');
-    const brandMap = new Map();
+    const { data: products } = await axios.get('http://localhost:3000/products')
+    const brandMap = new Map()
 
     // Contar productos por marca
-    products.forEach(product => {
-      brandMap.set(product.brand, (brandMap.get(product.brand) || 0) + 1);
-    });
+    products.forEach((product) => {
+      brandMap.set(product.brand, (brandMap.get(product.brand) || 0) + 1)
+    })
 
     // Preparar datos para el gráfico
-    chartData.value.labels = Array.from(brandMap.keys());
-    chartData.value.datasets[0].data = Array.from(brandMap.values());
+    chartData.value.labels = Array.from(brandMap.keys())
+    chartData.value.datasets[0].data = Array.from(brandMap.values())
 
     // Colores para cada marca
     chartData.value.datasets[0].backgroundColor = chartData.value.labels.map(
-      () => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.2)`,
-    );
+      () =>
+        `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.2)`
+    )
     chartData.value.datasets[0].borderColor = chartData.value.labels.map(
-      () => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`,
-    );
+      () =>
+        `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`
+    )
   } catch (error) {
-    console.error('Error fetching products:', error);
-    
+    console.error('Error fetching products:', error)
   }
-});
+})
 </script>
