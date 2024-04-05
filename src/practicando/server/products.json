@@ -83,6 +83,27 @@
       "description": "750 mL, -25%, Tottus",
       "brand": "NAVARRO CORREAS",
       "stock": 5
+    },
+    {
+      "name": "Agua Cielo Grande",
+      "description": "3 Litros.",
+      "brand": "CIELO",
+      "stock": 16,
+      "id": 13
+    },
+    {
+      "name": "Leche Deslactosada ",
+      "description": "55",
+      "brand": "GLORIA",
+      "stock": 45,
+      "id": 14
+    },
+    {
+      "name": "Papas Fritas Hot",
+      "description": "Papas Fritas TOTTUS",
+      "brand": "TOTTUS",
+      "stock": 15,
+      "id": 15
     }
   ]
 }

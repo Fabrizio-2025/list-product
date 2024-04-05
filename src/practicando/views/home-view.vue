@@ -355,6 +355,12 @@ function addProduct() {
       newProductStock.value = 0
       fetchProducts() // Fetch the updated list of products
       closeCreatePopup()
+      toast.add({
+          severity: 'success',
+          summary: 'Producto Agregado',
+          detail: 'El producto ha sido modificado exitosamente.',
+          life: 3000
+        })
     })
     .catch((error) => {
       console.error('Error:', error)
