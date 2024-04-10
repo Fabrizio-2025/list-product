@@ -34,13 +34,13 @@
         <template #body="slotProps">
           <Button
             icon="pi pi-trash"
-            class="p-button-danger w-3 m-2"
+            class="p-button-danger w-4 m-2"
             @click="deleteProduct(slotProps.data.id)"
             >Eliminar</Button
           >
           <Button
             icon="pi pi-pencil"
-            class="p-button-info w-3 m-2"
+            class="p-button-info w-4 m-2"
             @click="openEditPopup(slotProps.data)"
             >Modificar</Button
           >
