@@ -11,12 +11,17 @@
         optionLabel="name"
       />
     </div>
-    <!-- Gráfico de Stock -->
+    <!-- Gráfico de Marca -->
     <div
-      class="w-12 h-40rem flex justify-content-center align-items-center"
-      v-if="selectedData.value === 'less-stock'"
+      class="w-12 h-20rem flex justify-content-center align-items-center"
+      v-if="selectedData.value === 'more-market'"
     >
-      <Chart class="card w-7 h-full" type="bar" :data="chartData" :options="chartOptions" />
+      <Chart
+        class="flex justify-content-center card w-7 h-full"
+        type="pie"
+        :data="brandChartData"
+        :options="brandChartOptions"
+      />
     </div>
     <!-- Gráfico de Ventas -->
     <div
@@ -29,21 +34,38 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import Chart from 'primevue/chart'
 import axios from 'axios'
 import Dropdown from 'primevue/dropdown'
 
+const brandChartData = ref({}) // Datos para el gráfico de marcas
+const brandChartOptions = ref({}) // Opciones para el gráfico de marcas
+
 // Utilizaremos una API para obtener los datos de forma centralizada.
 const api = axios.create({ baseURL: 'http://localhost:3000' })
 
+function getRandomColor() {
+  let color = 'rgba(';
+  for (let i = 0; i < 3; i++) {
+    color += Math.floor(Math.random() * 256) + ',';
+  }
+  color += '0.5)'; // Ajusta la opacidad para backgroundColor
+  return color;
+}
+
+function getRandomHoverColor(baseColor) {
+  let hoverColor = baseColor.slice(0, baseColor.lastIndexOf(',')) + ',0.8)'; // Aumenta la opacidad para hover
+  return hoverColor;
+}
+
+
 // Variables reactivas y su inicialización
 const filterData = ref([
-  { name: 'Menos Stock', value: 'less-stock' },
+  { name: 'Mas Mercado', value: 'more-market' },
   { name: 'Más Ventas', value: 'more-sales' }
 ])
-const selectedData = ref('less-stock')
-const chartData = ref({})
+const selectedData = ref('more-market')
 const salesChartData = ref({})
 const chartOptions = ref({
   scales: { y: { beginAtZero: true } },
@@ -51,71 +73,51 @@ const chartOptions = ref({
   maintainAspectRatio: false
 })
 
-
 // fetchData se convierte en una función asíncrona autollamada para inmediatamente obtener datos.
 const fetchData = async () => {
   try {
-    if (selectedData.value === 'less-stock') {
+    if (selectedData.value === 'more-market') {
       const { data: products } = await api.get('/products')
-      prepareStockChartData(products)
-    } else {
-      const { data: sales } = await api.get('/sales')
-      prepareSalesChartData(sales)
+      prepareBrandChartData(products)
+    } else if (selectedData.value === 'more-sales') {
+      // ... tus otras condiciones aquí ...
     }
   } catch (error) {
     console.error(`Error al obtener los datos: ${error.message}`)
   }
 }
 
-// Este watchEffect reemplaza al anterior watch con { immediate: true }
 watchEffect(() => {
   fetchData()
 })
-function prepareStockChartData(products) {
-  // Preparación de datos para el gráfico de stock
-  chartData.value = {
-    labels: products.map((p) => p.name),
+function prepareBrandChartData(products) {
+  const brandCounts = products.reduce((acc, product) => {
+    acc[product.brand] = (acc[product.brand] || 0) + 1;
+    return acc;
+  }, {});
+
+  const brandLabels = Object.keys(brandCounts);
+  const brandData = brandLabels.map(brand => brandCounts[brand]);
+  const backgroundColors = brandLabels.map(() => getRandomColor());
+  const hoverBackgroundColors = backgroundColors.map(color => getRandomHoverColor(color));
+
+  brandChartData.value = {
+    labels: brandLabels,
     datasets: [
       {
-        label: 'Stock de Productos',
-        data: products.map((p) => p.stock),
-        backgroundColor: products.map((p) =>
-          p.stock < 20 ? 'rgba(255, 99, 132, 0.2)' : 'rgba(54, 162, 235, 0.2)'
-        ),
-        borderColor: products.map((p) =>
-          p.stock < 20 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)'
-        ),
-        borderWidth: 1
+        data: brandData,
+        backgroundColor: backgroundColors,
+        hoverBackgroundColor: hoverBackgroundColors,
       }
     ]
-  }
-}
+  };
 
-function prepareSalesChartData(sales) {
-  // Preparación de datos para el gráfico de ventas
-  const salesData = sales.reduce((acc, sale) => {
-    const date = formatDate(sale.date)
-    acc[date] = (acc[date] || 0) + sale.total
-    return acc
-  }, {})
-
-  const sortedDates = Object.keys(salesData).sort()
-  salesChartData.value = {
-    labels: sortedDates,
-    datasets: [
-      {
-        label: 'Ventas Diarias',
-        data: sortedDates.map((date) => salesData[date]),
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1
-      }
-    ]
-  }
-}
-
-function formatDate(date) {
-  // Formateo de fecha simplificado y centralizado
-  return date.split('T')[0]
-}
+  brandChartOptions.value = {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: {
+      position: 'bottom'
+    },
+    cutoutPercentage: 50, // Ajusta esto para un gráfico tipo dona
+  };}
 </script>

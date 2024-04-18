@@ -29,7 +29,7 @@
       <Column field="name" header="Nombre"></Column>
       <Column field="description" header="Descripción"></Column>
       <Column field="brand" sortable header="Marca"></Column>
-      <Column field="stock" sortable header="Stock"></Column>
+      <Column field="price" sortable header="Price"></Column>
       <Column header="Acciones">
         <template #body="slotProps">
           <Button
@@ -68,7 +68,7 @@
             </FloatLabel>
           </div>
           <InputNumber
-            v-model="editProductStock"
+            v-model="editProductPrice"
             showButtons
             buttonLayout="vertical"
             style="width: 3rem"
@@ -116,7 +116,7 @@
             </FloatLabel>
           </div>
           <InputNumber
-            v-model="newProductStock"
+            v-model="newProductPrice"
             showButtons
             buttonLayout="vertical"
             style="width: 3rem"
@@ -167,7 +167,7 @@ const products = ref<Product[]>([])
 const newProductName = ref('')
 const newProductDescription = ref('')
 const newProductBrand = ref('')
-const newProductStock = ref(0)
+const newProductPrice = ref(0)
 
 const editPopupVisible = ref(false)
 const createPopupVisible = ref(false)
@@ -175,7 +175,7 @@ const editProduct = ref<Product | null>(null)
 const editProductName = ref('')
 const editProductDescription = ref('')
 const editProductBrand = ref('')
-const editProductStock = ref(0)
+const editProductPrice = ref(0)
 const toast = useToast()
 const autocompleteValue = ref('')
 const brandSuggestions = ref<string[]>([])
@@ -190,7 +190,7 @@ const searchOptions = ref([
   { name: 'Nombre', value: 'name' },
   { name: 'Descripción', value: 'description' },
   { name: 'Marca', value: 'brand' },
-  { name: 'Stock', value: 'stock' }
+  { name: 'Price', value: 'price' }
 ])
 
 const selectedSearchOption = ref(searchOptions.value[0])
@@ -203,7 +203,7 @@ const isUpdateButtonDisabled = computed(() => {
   const fieldsFilled =
     editProductName.value.trim() !== '' &&
     editProductBrand.value.trim() !== '' &&
-    editProductStock.value >= 0
+    editProductPrice.value >= 0
 
   return !fieldsFilled
 })
@@ -212,7 +212,7 @@ const isAddButtonDisabled = computed(() => {
   return (
     newProductName.value.trim() === '' ||
     newProductBrand.value.trim() === '' ||
-    newProductStock.value <= 0 // Asumiendo que el stock no puede ser 0 o negativo.
+    newProductPrice.value <= 0 // Asumiendo que el price no puede ser 0 o negativo.
   )
 })
 
@@ -275,7 +275,7 @@ function closeCreatePopup() {
   newProductName.value = ''
   newProductDescription.value = ''
   newProductBrand.value = ''
-  newProductStock.value = 0
+  newProductPrice.value = 0
 }
 
 function openCreatePopup() {
@@ -331,7 +331,7 @@ function addProduct() {
     name: newProductName.value,
     description: newProductDescription.value,
     brand: newProductBrand.value,
-    stock: newProductStock.value
+    price: newProductPrice.value
   }
 
   fetch('http://localhost:3000/products', {
@@ -352,13 +352,13 @@ function addProduct() {
       newProductName.value = ''
       newProductDescription.value = ''
       newProductBrand.value = ''
-      newProductStock.value = 0
+      newProductPrice.value = 0
       fetchProducts() // Fetch the updated list of products
       closeCreatePopup()
       toast.add({
           severity: 'success',
           summary: 'Producto Agregado',
-          detail: 'El producto ha sido modificado exitosamente.',
+          detail: 'El producto ha sido agregado exitosamente.',
           life: 3000
         })
     })
@@ -372,7 +372,7 @@ function openEditPopup(product: Product) {
   editProductName.value = product.name
   editProductDescription.value = product.description
   editProductBrand.value = product.brand
-  editProductStock.value = product.stock
+  editProductPrice.value = product.price
   editPopupVisible.value = true
 }
 
@@ -381,7 +381,7 @@ function closeEditPopup() {
   editProductName.value = ''
   editProductDescription.value = ''
   editProductBrand.value = ''
-  editProductStock.value = 0
+  editProductPrice.value = 0
   editPopupVisible.value = false
 }
 
@@ -392,7 +392,7 @@ function updateProduct() {
       name: editProductName.value,
       description: editProductDescription.value,
       brand: editProductBrand.value,
-      stock: editProductStock.value
+      price: editProductPrice.value
     }
 
     fetch(`http://localhost:3000/products/${editProduct.value.id}`, {
