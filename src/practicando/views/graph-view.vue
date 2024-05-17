@@ -8,7 +8,7 @@
         v-model="selectedData"
         placeholder="Selecciona los Datos"
         :options="filterData"
-        optionLabel="name"
+        option-label="name"
       />
     </div>
     <!-- Gráfico de Marca -->
@@ -41,14 +41,14 @@
         </li>
       </ul>
       <div>
-        <strong>Total: ${{ totalAmount }}</strong>
+        <strong v-if="totalPriceMessage">{{ totalPriceMessage }}</strong>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watchEffect, computed } from 'vue'
+import { ref, watchEffect } from 'vue'
 import Chart from 'primevue/chart'
 import axios from 'axios'
 import Dropdown from 'primevue/dropdown'
@@ -60,13 +60,9 @@ const brandChartData = ref({}) // Datos para el gráfico de marcas
 const brandChartOptions = ref({}) // Opciones para el gráfico de marcas
 const saleDetails = ref([]) // Detalles de la venta
 const saleId = ref(null) // ID de la boleta a buscar
+const totalPriceMessage = ref('')
 
-const totalAmount = computed(() => {
-  const total = saleDetails.value.reduce((sum, product) => {
-    return sum + product.price;
-  }, 0);
-  return total.toFixed(2); // Asegura tres decimales
-});
+
 
 function getRandomColor() {
   let color = 'rgba('
@@ -105,8 +101,16 @@ const fetchSaleDetails = async () => {
   try {
     const { data: saleDetailsData } = await api.get(`/sale-details/sale/${saleId.value}`)
     saleDetails.value = saleDetailsData
+    const { data: totalPrice } = await api.get(`/sale-details/sale/${saleId.value}/total-price`)
+    
+    if (totalPrice === 0) {
+      totalPriceMessage.value = 'Boleta no encontrada'
+    } else {
+      totalPriceMessage.value = `El precio total de la boleta ${saleId.value} es $${totalPrice.toFixed(2)}`
+    }
   } catch (error) {
     console.error(`Error al obtener los detalles de la venta: ${error.message}`)
+    totalPriceMessage.value = 'Boleta no encontrada'
   }
 }
 
