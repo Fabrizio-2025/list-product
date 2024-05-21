@@ -15,7 +15,6 @@
           placeholder="Select a Field"
           class="w-full md:w-14rem h-3rem"
         />
-
         <AutoComplete
           v-model="autocompleteValue"
           :suggestions="brandSuggestions"
@@ -36,14 +35,12 @@
             icon="pi pi-trash"
             class="p-button-danger w-4 m-2"
             @click="deleteProduct(slotProps.data.id)"
-            >Eliminar</Button
-          >
+            >Eliminar</Button>
           <Button
             icon="pi pi-pencil"
             class="p-button-info w-4 m-2"
             @click="openEditPopup(slotProps.data)"
-            >Modificar</Button
-          >
+            >Modificar</Button>
         </template>
       </Column>
     </DataTable>
@@ -87,11 +84,9 @@
             class="flex justify-content-center"
             @click="updateProduct"
             :disabled="isUpdateButtonDisabled"
-            >Actualizar Producto</Button
-          >
+            >Actualizar Producto</Button>
           <Button class="p-button-danger flex justify-content-center" @click="closeEditPopup"
-            >Cerrar</Button
-          >
+            >Cerrar</Button>
         </div>
       </div>
     </div>
@@ -136,11 +131,9 @@
             class="w-3 justify-content-center m-1"
             @click="addProduct"
             :disabled="isAddButtonDisabled"
-            >Añadir Producto</Button
-          >
+            >Añadir Producto</Button>
           <Button class="p-button-danger w-3 justify-content-center m-1" @click="closeCreatePopup"
-            >Cerrar</Button
-          >
+            >Cerrar</Button>
         </div>
       </div>
     </div>
@@ -303,10 +296,7 @@ function performDeletion(productId: number) {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      return response.json()
-    })
-    .then(() => {
-      fetchProducts()
+      products.value = products.value.filter(product => product.id !== productId) // Actualiza la lista localmente
       toast.add({
         severity: 'warn',
         summary: 'Producto eliminado',
@@ -347,23 +337,24 @@ function addProduct() {
       }
       return response.json()
     })
-    .then(() => {
+    .then((product) => {
       // Clear the input fields after successful addition
       newProductName.value = ''
       newProductDescription.value = ''
       newProductBrand.value = ''
       newProductPrice.value = 0
-      fetchProducts() // Fetch the updated list of products
+      products.value.push(product) // Añade el nuevo producto a la lista local
       closeCreatePopup()
       toast.add({
-          severity: 'success',
-          summary: 'Producto Agregado',
-          detail: 'El producto ha sido agregado exitosamente.',
-          life: 3000
-        })
+        severity: 'success',
+        summary: 'Producto Agregado',
+        detail: 'El producto ha sido agregado exitosamente.',
+        life: 3000
+      })
     })
     .catch((error) => {
       console.error('Error:', error)
+      showError('Error', 'No se pudo añadir el producto.')
     })
 }
 
@@ -408,8 +399,11 @@ function updateProduct() {
         }
         return response.json()
       })
-      .then(() => {
-        fetchProducts() // Fetch the updated list of products
+      .then((product) => {
+        const index = products.value.findIndex(p => p.id === product.id)
+        if (index !== -1) {
+          products.value[index] = product // Actualiza el producto en la lista local
+        }
         closeEditPopup() // Close the edit popup dialog
         toast.add({
           severity: 'info',
@@ -426,6 +420,7 @@ function updateProduct() {
 }
 
 onMounted(fetchProducts)
+
 </script>
 
 <style scoped>
