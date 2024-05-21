@@ -37,7 +37,7 @@
       <button @click="fetchSaleDetails" class="p-button p-component">Buscar</button>
       <ul>
         <li class="list-decimal" v-for="product in saleDetails" :key="product.id">
-          {{ product.name }} - {{ product.brand }} - ${{ product.price }}
+          {{ product.name }} - {{ product.brand }} - ${{ product.price }} (Cantidad: {{ product.quantity }})
         </li>
       </ul>
       <div>
@@ -61,8 +61,6 @@ const brandChartOptions = ref({}) // Opciones para el gráfico de marcas
 const saleDetails = ref([]) // Detalles de la venta
 const saleId = ref(null) // ID de la boleta a buscar
 const totalPriceMessage = ref('')
-
-
 
 function getRandomColor() {
   let color = 'rgba('
